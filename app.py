@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from sqlalchemy import create_engine
 
 # =============================================
-#   DATABASE & CONFIG
+#    DATABASE & CONFIG
 # =============================================
 DB_URL = "postgresql://bumeharaz:WrQhUZZjf2WqsJHiSOFuAszRrSUVQqAA@dpg-d5mj5abe5dus73eiju70-a.oregon-postgres.render.com/dbname_ou61"
 engine = create_engine(DB_URL)
@@ -59,7 +59,7 @@ app.index_string = f'''
 server = app.server 
 
 # =============================================
-#   LAYOUT
+#    LAYOUT
 # =============================================
 app.layout = html.Div(id='main-container', children=[
     dcc.Store(id='theme-store', storage_type='local'), 
@@ -102,7 +102,7 @@ app.layout = html.Div(id='main-container', children=[
 ])
 
 # =============================================
-#   THEME PERSISTENCE
+#    THEME PERSISTENCE
 # =============================================
 @app.callback(
     Output('theme-toggle', 'on'),
@@ -121,7 +121,7 @@ def save_theme(on):
     return ('dark-theme' if on else 'light-theme'), on
 
 # =============================================
-#   CORE DASHBOARD CALLBACK
+#    CORE DASHBOARD CALLBACK
 # =============================================
 @app.callback(
     Output('live-dashboard', 'children'),
@@ -131,7 +131,6 @@ def update_dashboard(n, dark_mode):
     raw_data = get_db_data()
     data = {k: int(float(v)) if v is not None else 0 for k, v in raw_data.items()}
     
-    # Custom Labels for the Table
     table_labels = {
         "total_registered": "TOTAL REGISTERED",
         "visitors": "VISITORS",
@@ -147,7 +146,6 @@ def update_dashboard(n, dark_mode):
         "total_revenue": "TOTAL REVENUE"
     }
 
-    # Sorting items for the two columns
     order = ["total_registered", "visitors", "applied_to_job", "application", "unique_applicant", "total_companies", 
              "direct_payment", "paid_by_applicants", "pro_users_today", "amount_pro_users", "pro_seeker_total", "total_revenue"]
     
@@ -163,10 +161,17 @@ def update_dashboard(n, dark_mode):
     grid_c = "rgba(0,210,255,0.1)" if dark_mode else "rgba(0,0,0,0.05)"
     d_style = {'backgroundColor': 'transparent', 'color': text_color}
 
+    # FIX: Lock graph height and ensure responsive width
     def apply_style(fig):
-        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)',
             font=dict(color=text_color, family='Rajdhani'),
-            margin=dict(l=30, r=10, t=10, b=30), height=180, showlegend=False)
+            margin=dict(l=20, r=20, t=10, b=20), 
+            height=160, # Locked Height
+            autosize=True, # Responsive Width
+            showlegend=False
+        )
         fig.update_yaxes(gridcolor=grid_c, zerolinecolor=grid_c)
         fig.update_xaxes(gridcolor=grid_c, zerolinecolor=grid_c)
         return fig
@@ -174,6 +179,7 @@ def update_dashboard(n, dark_mode):
     df1 = pd.DataFrame(items[:6])
     df2 = pd.DataFrame(items[6:])
 
+    # Graphs
     f1 = apply_style(go.Figure(go.Bar(x=['Reg', 'Vis', 'Apps'], y=[data['total_registered'], data['visitors'], data['applied_to_job']], marker_color=accent)))
     f2 = apply_style(go.Figure(go.Pie(labels=['Direct', 'Pro'], values=[data['direct_payment'], data['amount_pro_users']], hole=.6)))
     eng_val = (data['application'] / data['total_companies']) if data['total_companies'] > 0 else 0
@@ -198,15 +204,15 @@ def update_dashboard(n, dark_mode):
         ], className='dual-table-container'),
 
         html.Div([
-            html.Div([html.H5("USER FLOW"), dcc.Graph(figure=f1, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("REVENUE SHARE"), dcc.Graph(figure=f2, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("ENGAGEMENT"), dcc.Graph(figure=f3, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("UNIQUE REACH"), dcc.Graph(figure=f4, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("FEE RATIO"), dcc.Graph(figure=f5, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("PRO GROWTH"), dcc.Graph(figure=f6, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("TRACTION"), dcc.Graph(figure=f7, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("GOAL TRACK"), dcc.Graph(figure=f8, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("CONVERSION"), dcc.Graph(figure=f9, config={'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("USER FLOW"), dcc.Graph(figure=f1, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("REVENUE SHARE"), dcc.Graph(figure=f2, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("ENGAGEMENT"), dcc.Graph(figure=f3, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("UNIQUE REACH"), dcc.Graph(figure=f4, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("FEE RATIO"), dcc.Graph(figure=f5, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("PRO GROWTH"), dcc.Graph(figure=f6, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("TRACTION"), dcc.Graph(figure=f7, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("GOAL TRACK"), dcc.Graph(figure=f8, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("CONVERSION"), dcc.Graph(figure=f9, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
         ], className='nine-graph-matrix'),
     ]
 
@@ -260,7 +266,7 @@ app.clientside_callback(
                 .dark-theme .glass-header { background: rgba(15, 23, 42, 0.95); }
                 .header-logo { height: 35px; }
                 .header-title { font-family: 'Rajdhani'; color: #00d2ff; font-size: 1.2rem; margin: 0; }
-                .dual-table-container { display: flex; gap: 20px; justify-content: center; padding: 0 5% 30px; }
+                .dual-table-container { display: flex; gap: 20px; justify-content: center; padding: 0 5% 20px; }
                 .table-col { flex: 1; background: rgba(0,210,255,0.02); border-radius: 12px; overflow: hidden; }
                 .no-hover-table * { pointer-events: none !important; background-color: transparent !important; }
                 .hover-glow { transition: 0.3s ease; border: 1px solid transparent; }
@@ -268,9 +274,25 @@ app.clientside_callback(
                 .mini-stats-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; margin-top: 20px;}
                 .mini-intel { padding: 15px; border-radius: 10px; border-left: 4px solid #00d2ff; background: rgba(0,210,255,0.03); min-width: 180px; }
                 .mini-intel h4 { font-size: 1.5rem; color: #00d2ff; margin: 5px 0 0; font-family: 'Rajdhani'; }
-                .nine-graph-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 5% 50px; }
-                .graph-box-m { background: rgba(0,210,255,0.03); border-radius: 12px; padding: 10px; border: 1px solid rgba(0,210,255,0.08); }
-                .graph-box-m h5 { font-family: 'Rajdhani'; color: #00d2ff; text-align: center; margin: 5px 0; font-size: 0.8rem; }
+                
+                /* GRID FIX: Ensure items don't stretch vertically */
+                .nine-graph-matrix { 
+                    display: grid; 
+                    grid-template-columns: repeat(3, 1fr); 
+                    gap: 15px; 
+                    padding: 0 5% 50px; 
+                    align-items: start; 
+                }
+                .graph-box-m { 
+                    background: rgba(0,210,255,0.03); 
+                    border-radius: 12px; 
+                    padding: 8px; 
+                    border: 1px solid rgba(0,210,255,0.08); 
+                    height: 200px; /* Locked box height */
+                    overflow: hidden;
+                }
+                .graph-box-m h5 { font-family: 'Rajdhani'; color: #00d2ff; text-align: center; margin: 2px 0; font-size: 0.75rem; }
+                
                 .timer-flex { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
                 .time-mini-cube { padding: 10px; background: rgba(0,210,255,0.06); border-radius: 8px; min-width: 70px; text-align: center; }
                 .time-mini-cube h2 { color: #00d2ff; margin: 0; font-family: 'Rajdhani'; font-size: 2rem; }
