@@ -64,7 +64,7 @@ server = app.server
 app.layout = html.Div(id='main-container', children=[
     dcc.Store(id='theme-store', storage_type='local'), 
     dcc.Store(id='timer-trigger', data=1),
-    dcc.Interval(id='live-refresh', interval=300000, n_intervals=0),
+    dcc.Interval(id='live-refresh', interval=100000, n_intervals=0),
 
     html.Div(id='quantum-loader', children=[
         html.Div([
@@ -314,3 +314,4 @@ app.clientside_callback(
 
 if __name__ == '__main__':
     app.run(debug=True)
+
