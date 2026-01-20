@@ -222,7 +222,7 @@ app.clientside_callback(
     function(trigger) {{
         const runUpdate = () => {{
             const start = new Date(2026, 0, 20, 10, 0, 0);
-            const end = new Date(2026, 0, 20, 17, 0, 0);
+            const end = new Date(2026, 0, 20, 16, 0, 0);
             const now = new Date();
             let diff, statusText, showRed, showGreen;
             if (now < start) {{ diff = start - now; statusText = "WAITING FOR LAUNCH"; showRed = false; showGreen = true; }}
@@ -314,4 +314,5 @@ app.clientside_callback(
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
