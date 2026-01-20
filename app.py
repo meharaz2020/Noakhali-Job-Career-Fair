@@ -206,7 +206,7 @@ def update_dashboard(n, dark_mode):
         html.Div([
             html.Div([html.H5("USER FLOW"), dcc.Graph(figure=f1, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
             html.Div([html.H5("REVENUE SHARE"), dcc.Graph(figure=f2, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
-            html.Div([html.H5("ENGAGEMENT"), dcc.Graph(figure=f3, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
+            html.Div([html.H5("ENGAGEMENT [Per job avg apps]"), dcc.Graph(figure=f3, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
             html.Div([html.H5("UNIQUE REACH"), dcc.Graph(figure=f4, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
             html.Div([html.H5("FEE RATIO"), dcc.Graph(figure=f5, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
             html.Div([html.H5("PRO GROWTH"), dcc.Graph(figure=f6, config={'responsive': True, 'displayModeBar': False})], className='graph-box-m hover-glow'),
@@ -314,6 +314,7 @@ app.clientside_callback(
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
