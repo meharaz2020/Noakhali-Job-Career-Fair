@@ -182,7 +182,7 @@ def update_dashboard(n, dark_mode):
     # Graphs
     f1 = apply_style(go.Figure(go.Bar(x=['Reg', 'Vis', 'Apps'], y=[data['total_registered'], data['visitors'], data['applied_to_job']], marker_color=accent)))
     f2 = apply_style(go.Figure(go.Pie(labels=['Direct', 'Pro'], values=[data['direct_payment'], data['amount_pro_users']], hole=.6)))
-    eng_val = (data['application'] / data['total_companies']) if data['total_companies'] > 0 else 0
+    eng_val = (data['application'] / data['applied_to_job']) if data['applied_to_job'] > 0 else 0
     f3 = apply_style(go.Figure(go.Indicator(mode="gauge+number", value=int(eng_val), gauge={'bar':{'color':accent}, 'axis':{'range':[0,500]}})))
     f4 = apply_style(go.Figure(go.Bar(x=['Uni', 'Tot'], y=[data['unique_applicant'], data['application']], marker_color=accent)))
     f5 = apply_style(go.Figure(go.Pie(labels=['Dir', 'Fee'], values=[data['direct_payment'], data['paid_by_applicants']], hole=.6)))
@@ -314,6 +314,7 @@ app.clientside_callback(
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
